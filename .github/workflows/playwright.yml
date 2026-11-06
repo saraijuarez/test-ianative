@@ -1,0 +1,33 @@
+# Runs the recovery project in starter/ on every push, pull request,
+# and manual dispatch. When a student pushes this repository to their
+# own GitHub account, this workflow runs in *their* repository.
+name: Playwright Tests
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        # Workflows must live at the repo root; the project is nested.
+        working-directory: starter
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: starter/package-lock.json
+      # Reproducible install from the committed lockfile.
+      - run: npm ci
+      # Browsers + Linux system dependencies.
+      - run: npx playwright install --with-deps
+      - run: npx playwright test
+      # Keep the HTML report even when tests fail (but not when cancelled).
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: starter/playwright-report/
+          retention-days: 30

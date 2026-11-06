@@ -1,0 +1,9 @@
+# Dependencies — restored by `npm ci`, never committed
+node_modules/
+
+# Playwright output — regenerated on every run
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

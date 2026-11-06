@@ -1,0 +1,8 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Dependencies (Playwright-specific exclusions live in starter/.gitignore)
+node_modules/

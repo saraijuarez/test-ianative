@@ -1,0 +1,25 @@
+# Runs the read-only environment validators on all three student
+# platforms, so a broken validator is caught before students see it.
+name: Validate Kit
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Run validator (bash)
+        if: runner.os != 'Windows'
+        run: bash scripts/verify-environment.sh
+      - name: Run validator (PowerShell)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/verify-environment.ps1
