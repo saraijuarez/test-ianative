@@ -18,6 +18,9 @@ export default defineConfig({
   reporter: [['list'], ['html']],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
+    /* Base URL for `page.goto('/')`. Tests that pass an absolute URL are unaffected. */
+    baseURL: 'https://www.saucedemo.com',
+
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
