@@ -27,18 +27,29 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    /* API tests: no browser, run once, against the DummyJSON base URL. */
+    {
+      name: 'api',
+      testMatch: /api\/.*\.spec\.ts/,
+      use: { baseURL: 'https://dummyjson.com' },
+    },
+
+    /* UI projects skip the API tests so they do not run once per browser. */
     {
       name: 'chromium',
+      testIgnore: /api\//,
       use: { ...devices['Desktop Chrome'] },
     },
 
     {
       name: 'firefox',
+      testIgnore: /api\//,
       use: { ...devices['Desktop Firefox'] },
     },
 
     {
       name: 'webkit',
+      testIgnore: /api\//,
       use: { ...devices['Desktop Safari'] },
     },
   ],
