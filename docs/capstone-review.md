@@ -35,7 +35,7 @@
 | CAP-06 Login rechazado | `starter/pages/login-page.ts`, `starter/tests/saucedemo.spec.ts` | BR-01 solo tenía el caso positivo | Aprobado | ✅ E-03, E-04 |
 | CAP-10 Precio en el catálogo | `starter/pages/inventory-page.ts`, `starter/tests/saucedemo.spec.ts` | BR-02 solo comprobaba el conteo | Aprobado | ✅ E-03, E-04 |
 | CAP-07 Contrato 404 | `starter/tests/api/products.spec.ts` | BR-04 sin contrato de error | Aprobado | ✅ E-02, E-04 |
-| CAP-09 Mínimo privilegio | `.github/workflows/validate-kit.yml` | No tenía bloque `permissions` | Aprobado | ⏳ Pendiente del run de la rama (E-11) |
+| CAP-09 Mínimo privilegio | `.github/workflows/validate-kit.yml` | No tenía bloque `permissions` | Aprobado | ✅ E-11 (Validate Kit en verde) |
 | CAP-02 Prueba controlada de fallo en CI | Rama desechable `capstone/gate-failure-probe`, **borrada** | AC-06 sin evidencia remota | Aprobado | ✅ E-07, E-08 |
 | CAP-04 READMEs corregidos | `README.md`, `starter/README.md` | Decían "no Page Objects" y "6 tests" | Aprobado | ✅ Revisión del diff |
 | CAP-05 Paquete documental | `docs/test-strategy.md`, `architecture.md`, `traceability.md`, `risk-register.md`, `adr/0001–0005`, `capstone-review.md`, `capstone-defense.md` | AC-01, AC-02, AC-09 | Aprobado | ✅ |
@@ -54,7 +54,7 @@
 | E-08 | Prueba B: aserción fallida en una rama desechable | GitHub Actions | `b328fc7` | **failure** en *Run API + UI tests*; artefactos `playwright-report`, `playwright-results-json` y `playwright-test-results` | [Run 43355734301](https://github.com/saraijuarez/test-ianative/actions/runs/43355734301) | Igual que E-07 |
 | E-09 | Push a `main` | GitHub Actions | `0e05766` | success | [Run 43347490538](https://github.com/saraijuarez/test-ianative/actions/runs/43347490538) | Antes de CAP-06/07/10 |
 | E-10 | Push de `obs/test-metrics` | GitHub Actions | `624f8a2` | success; `playwright-results-json` subido | [Run 43351761252](https://github.com/saraijuarez/test-ianative/actions/runs/43351761252) | El artefacto no se ha importado (requiere autenticación) |
-| E-11 | Push de `capstone/enterprise-review` | GitHub Actions | Pendiente | **Pendiente al escribir este documento** | — | Se registra en el informe de entrega |
+| E-11 | Push de `capstone/enterprise-review` (incluye CAP-06/07/09/10) | GitHub Actions | `039f7c9` | *Playwright Tests* **success** (Typecheck ✅, API + UI ✅; `playwright-report` y `playwright-results-json` subidos); *Validate Kit* **success** con `permissions: contents: read` | [Run 43356207776](https://github.com/saraijuarez/test-ianative/actions/runs/43356207776), [Run 43356207733](https://github.com/saraijuarez/test-ianative/actions/runs/43356207733) | El conteo por prueba está en el artefacto (requiere autenticación); en local, el mismo código dio 17/17 (E-05) |
 | E-12 | `GET /repos/…/rules/branches/main` y `GET /repos/…/branches/main` | API pública de GitHub | — | `[]` y `protected: false` | Respuesta de la API | La protección clásica requiere admin para verla (401) |
 
 ## 4. Acceptance matrix
@@ -63,8 +63,8 @@
 | --- | --- | --- | --- |
 | AC-01 Requisitos y riesgos | **Cumple** | [test-strategy.md](test-strategy.md), [risk-register.md](risk-register.md) | — |
 | AC-02 Arquitectura justificada | **Cumple** | [architecture.md](architecture.md), [adr/](adr/) | — |
-| AC-03 UI validada | **Parcial** | E-03, E-04, E-05; E-09 para los escenarios previos | Validar en CI los escenarios nuevos (E-11) |
-| AC-04 API validada | **Parcial** | E-02, E-04 | El 404 está pendiente en CI (E-11) |
+| AC-03 UI validada | **Cumple** | E-03, E-04, E-05 (local); E-11 (CI) | La cobertura se limita a lo descrito en traceability.md |
+| AC-04 API validada | **Cumple** | E-02, E-04 (local); E-11 (CI) | Solo el recurso `/products/{id}` |
 | AC-05 CI funcional | **Cumple** | E-07, E-08, E-09, E-10, con commit asociado | — |
 | AC-06 Gates fiables | **Cumple** en el workflow / **Parcial** como política | E-07 y E-08 (rojo), E-09 (verde) | Sin ruleset (E-12): no bloquea el merge |
 | AC-07 Resultados trazables | **Parcial** | E-08 y E-10 (artefactos), E-05 y E-06 (hash) | La observabilidad no está en `main`; no se ha importado un artefacto de CI |
@@ -79,7 +79,7 @@ Sin puntuación numérica: la puntuación corresponde al panel.
 | Dimension | Maximum | Evidence | Evaluation/pending |
 | --- | ---: | --- | --- |
 | Arquitectura y decisiones | 20 | architecture.md, 5 ADRs | Pendiente de evaluación |
-| Automatización UI/API | 25 | 7 escenarios lógicos (17 ejecuciones); E-03, E-04, E-05 | Pendiente; el CI de los escenarios nuevos está en E-11 |
+| Automatización UI/API | 25 | 7 escenarios lógicos (17 ejecuciones); E-03, E-04, E-05, E-11 | Pendiente de evaluación |
 | CI/CD y quality gates | 20 | E-07, E-08, E-09 | Pendiente; falta el ruleset |
 | Observabilidad y evidencia | 15 | E-06, E-10; 28 pruebas unitarias | Pendiente; no está en `main` |
 | Ingeniería asistida por IA | 10 | §9 | Pendiente de evaluación |
