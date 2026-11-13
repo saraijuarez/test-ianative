@@ -10,3 +10,8 @@ node_modules/
 
 # Personal practice files — never committed
 /scratch/
+
+# Observability data — raw results, imported history and generated reports stay local
+/results/
+/observability/history/
+/observability/out/

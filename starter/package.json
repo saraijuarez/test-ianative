@@ -6,7 +6,10 @@
   "scripts": {
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "report": "playwright show-report"
+    "report": "playwright show-report",
+    "obs:import": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON observability/cli.ts import",
+    "obs:report": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON observability/cli.ts report",
+    "obs:test": "playwright test --config=observability/playwright.unit.config.ts"
   },
   "license": "MIT",
   "devDependencies": {
