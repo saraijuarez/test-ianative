@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 
 /** What `LoginPage.login()` needs: the account to sign in with. */
 export type Credentials = {
@@ -8,11 +8,16 @@ export type Credentials = {
 
 /**
  * SauceDemo login page.
- * Owns the login form's UI knowledge (field placeholders, submit button).
+ * Owns the login form's UI knowledge (field placeholders, submit button, error banner).
  * The environment URL comes from `baseURL` in playwright.config.ts.
  */
 export class LoginPage {
-  constructor(private readonly page: Page) {}
+  /** Error banner shown when SauceDemo rejects a login (`<h3 data-test="error">`). */
+  readonly errorMessage: Locator;
+
+  constructor(private readonly page: Page) {
+    this.errorMessage = page.locator('[data-test="error"]');
+  }
 
   async goto(): Promise<void> {
     await this.page.goto('/');

@@ -10,7 +10,27 @@ const standardUser = {
   password: 'secret_sauce',
 } as const;
 
+// Locked-out demo account, also listed on the SauceDemo login page (not a real credential).
+const lockedOutUser = {
+  username: 'locked_out_user',
+  password: 'secret_sauce',
+} as const;
+
 const backpackName = 'Sauce Labs Backpack';
+const backpackPrice = '$29.99';
+
+test.describe('SauceDemo login rejection', () => {
+  // BR-01: an account that is not authorized must not reach the inventory.
+  test('locked-out user is rejected and stays on the login page', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await loginPage.login(lockedOutUser);
+
+    // SauceDemo explains the rejection and keeps the user on the login page.
+    await expect(loginPage.errorMessage).toHaveText('Epic sadface: Sorry, this user has been locked out.');
+    await expect(page).toHaveURL(/saucedemo\.com\/$/);
+  });
+});
 
 test.describe('SauceDemo as a standard user', () => {
   // Every test starts from a fresh browser context, so each one logs in on its own.
@@ -27,6 +47,9 @@ test.describe('SauceDemo as a standard user', () => {
     await expect(page).toHaveURL(/\/inventory\.html$/);
     await expect(page.getByText('Products', { exact: true })).toBeVisible();
     await expect(inventoryPage.items).toHaveCount(6);
+
+    // BR-02: catalog data is consistent — the backpack card shows its listed price.
+    await expect(inventoryPage.productPrice(backpackName)).toHaveText(backpackPrice);
   });
 
   test('standard user can add Sauce Labs Backpack to the cart', async ({ page }) => {

@@ -22,6 +22,11 @@ export class InventoryPage {
     return this.items.filter({ hasText: productName });
   }
 
+  /** The price shown on one product's card, e.g. "$29.99". */
+  productPrice(productName: string): Locator {
+    return this.productCard(productName).locator('[data-test="inventory-item-price"]');
+  }
+
   async addToCart(productName: string): Promise<void> {
     await this.productCard(productName).getByRole('button', { name: 'Add to cart' }).click();
   }

@@ -8,6 +8,9 @@ const mascara = {
   title: 'Essence Mascara Lash Princess',
 } as const;
 
+// An id far outside the DummyJSON catalog (verified to return 404).
+const missingProductId = 999999;
+
 test.describe('DummyJSON Products API', () => {
   test('returns the requested product with valid business data', async ({ request }) => {
     const productsApi = new ProductsApi(request);
@@ -35,5 +38,17 @@ test.describe('DummyJSON Products API', () => {
     expect(product.price).toBeGreaterThan(0);
     expect(Number.isInteger(product.stock)).toBe(true);
     expect(product.stock).toBeGreaterThanOrEqual(0);
+  });
+
+  test('returns 404 with an error message for a product that does not exist', async ({ request }) => {
+    const productsApi = new ProductsApi(request);
+
+    const response = await productsApi.getProduct(missingProductId);
+
+    // Error contract: not found, still JSON, with a message naming the requested id.
+    expect(response.status()).toBe(404);
+    expect(response.headers()['content-type']).toContain('application/json');
+    const body = (await response.json()) as { message: string };
+    expect(body.message).toBe(`Product with id '${missingProductId}' not found`);
   });
 });
