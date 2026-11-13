@@ -56,6 +56,16 @@ jobs:
           name: playwright-report
           path: starter/playwright-report/
           retention-days: 30
+      # Machine-readable results (json reporter) for starter/observability/. Like the
+      # report upload above, this step never changes the job result.
+      - name: Upload JSON results
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-results-json
+          path: starter/results/playwright-results.json
+          retention-days: 30
+          if-no-files-found: warn
       # Traces from failed tests (trace: 'on-first-retry' writes them to test-results/).
       - name: Upload failure traces
         uses: actions/upload-artifact@v4

@@ -1,6 +1,25 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
+ * CI context copied into the JSON report (`config.metadata`) so each results file
+ * can be traced back to its commit and GitHub Actions run. Only variables that are
+ * actually set are included — locally this is an empty object, never guessed values.
+ */
+const ciEnvKeys = [
+  'GITHUB_SHA',
+  'GITHUB_RUN_ID',
+  'GITHUB_RUN_ATTEMPT',
+  'GITHUB_REF_NAME',
+  'GITHUB_WORKFLOW',
+  'GITHUB_EVENT_NAME',
+  'GITHUB_REPOSITORY',
+  'GITHUB_SERVER_URL',
+] as const;
+const ciMetadata = Object.fromEntries(
+  ciEnvKeys.flatMap((key) => (process.env[key] ? [[key, process.env[key]]] : [])),
+);
+
+/**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
@@ -13,9 +32,11 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
-  /* Reporters: `list` prints progress in the terminal, `html` writes playwright-report/.
+  /* Reporters: `list` prints progress in the terminal, `html` writes playwright-report/,
+   * `json` writes machine-readable results for observability/ (see observability/README.md).
    * See https://playwright.dev/docs/test-reporters */
-  reporter: [['list'], ['html']],
+  reporter: [['list'], ['html'], ['json', { outputFile: 'results/playwright-results.json' }]],
+  metadata: ciMetadata,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL for `page.goto('/')`. Tests that pass an absolute URL are unaffected. */
