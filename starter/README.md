@@ -1,12 +1,18 @@
-# Starter — Lab 0 Recovery Project
+# Starter — Course Project
 
-A ready-to-run Playwright + TypeScript project. Use it when your own
-Lab 0 setup is broken and you want to keep going with the course.
+A Playwright + TypeScript project. It began as the Lab 0 recovery
+project and now holds the course work from Increments #01–#09:
 
-> **This is a recovery tool, not the course framework.** It is the
-> plain output of the Playwright initializer — no Page Objects,
-> fixtures, or abstractions. You will build those properly during the
-> course.
+- **UI (SauceDemo):** login, login rejection, catalog, and cart flows on
+  Page Objects (`pages/`).
+- **API (DummyJSON):** product by id and the not-found contract, through
+  `api/products-api.ts`.
+- **CI quality gates:** typecheck plus every Playwright project (see
+  [`docs/ci-quality-gates.md`](../docs/ci-quality-gates.md)).
+- **Observability:** JSON results normalized into metrics and a report
+  (see [`observability/README.md`](observability/README.md)).
+
+Architecture and decisions: [`docs/architecture.md`](../docs/architecture.md).
 
 ## When to use it
 
@@ -58,15 +64,21 @@ npx playwright test
 Expected result:
 
 ``` text
-Running 6 tests using N workers
-  ✓  1 [chromium] › tests/example.spec.ts:3:5 › has title
+Running 17 tests using N workers
   ...
-  6 passed
+  17 passed
 ```
 
-6 tests = 2 example tests × 3 browsers (Chromium, Firefox, WebKit).
-On Linux, use `npx playwright install --with-deps` if the browsers
-need system libraries.
+17 tests break down as follows:
+
+- 2 API tests run once, in the `api` project (no browser).
+- 5 UI tests run in each of 3 browsers (Chromium, Firefox, WebKit):
+  - 3 SauceDemo tests;
+  - 2 Playwright example tests.
+
+The public sites must be reachable. On Linux, use
+`npx playwright install --with-deps` if the browsers need system
+libraries.
 
 Useful commands:
 
@@ -75,6 +87,10 @@ Useful commands:
 | `npx playwright test` | `npm test` |
 | `npx playwright test --ui` | `npm run test:ui` |
 | `npx playwright show-report` | `npm run report` |
+| `npx playwright test --project=api` | — (API tests only) |
+| `npx --yes -p typescript@7.0.2 tsc --noEmit` | — (typecheck, as CI runs it) |
+| Observability unit tests | `npm run obs:test` |
+| Import results / build report | `npm run obs:import -- results/playwright-results.json`, `npm run obs:report` |
 
 ## Publish to your own GitHub repository
 
@@ -100,13 +116,19 @@ git push -u origin main
 
 ``` text
 starter/
-├── package.json           # pinned @playwright/test + @types/node
+├── package.json           # pinned @playwright/test + @types/node, obs:* scripts
 ├── package-lock.json      # committed — makes npm ci reproducible
-├── tsconfig.json          # editor support, moduleResolution "Bundler"
-├── playwright.config.ts   # generated config, list + html reporters
-├── .gitignore             # test output and node_modules
-└── tests/
-    └── example.spec.ts    # generated example tests
+├── tsconfig.json          # strict, noEmit, moduleResolution "Bundler"
+├── playwright.config.ts   # projects api/chromium/firefox/webkit; list + html + json reporters
+├── .gitignore             # test output, results, observability data
+├── pages/                 # SauceDemo Page Objects (login, inventory, cart)
+├── api/
+│   └── products-api.ts    # DummyJSON /products/{id}
+├── tests/
+│   ├── saucedemo.spec.ts  # UI: login rejection, inventory + price, cart
+│   ├── api/products.spec.ts  # API: product by id, 404 contract
+│   └── example.spec.ts    # Playwright example tests (kept, see docs/adr)
+└── observability/         # parser, contract 1.0.0, metrics, report, unit tests
 ```
 
 `node_modules/` and browsers are never committed — `npm ci` and

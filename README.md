@@ -63,31 +63,38 @@ AI-Native-Test-Automation-Starter/
 │   ├── windows-setup.md
 │   ├── macos-setup.md
 │   ├── troubleshooting.md
-│   └── lab-0-guide.md
+│   ├── lab-0-guide.md
+│   ├── ci-quality-gates.md              # CI gates, artifacts, required check
+│   ├── test-strategy.md                 # Capstone: requirements, risks, scope
+│   ├── architecture.md                  # Capstone: layers and dependencies
+│   ├── traceability.md                  # Capstone: BR → tests → evidence
+│   ├── risk-register.md                 # Capstone: risks and mitigations
+│   ├── adr/                             # Capstone: architecture decisions
+│   ├── capstone-review.md               # Capstone: final engineering review
+│   └── capstone-defense.md              # Capstone: defense guide
 ├── scripts/
 │   ├── verify-environment.sh            # read-only validator (macOS/Linux)
 │   └── verify-environment.ps1           # read-only validator (Windows)
-└── starter/                             # ready-to-run Playwright project
-    ├── README.md
-    ├── package.json
-    ├── package-lock.json
-    ├── tsconfig.json
-    ├── playwright.config.ts
-    ├── .gitignore
-    └── tests/example.spec.ts
+└── starter/                             # the course project (see starter/README.md)
+    ├── pages/                           # SauceDemo Page Objects
+    ├── api/                             # DummyJSON ProductsApi
+    ├── tests/                           # UI (SauceDemo) + API (DummyJSON) tests
+    ├── observability/                   # results normalization, metrics, report
+    └── playwright.config.ts
 ```
 
 ## Scope
 
-This kit covers **environment setup and Lab 0 only**.
+This repository started as the Lab 0 setup kit and now carries the
+course project built through Increments #01–#09:
 
-- **Included:** setup guides, read-only validators, troubleshooting,
-  and a ready Playwright project under `starter/` as the recovery path.
-- **Not included:** the course framework. `starter/` is the plain
-  output of the Playwright initializer — no Page Objects, fixtures, API
-  clients, or custom reporters. You build those during the course.
-- The recovery path skips the scaffold, not the environment: it still
-  needs Node.js, npm, Git, and network access.
+- **Environment:** setup guides, read-only validators, troubleshooting.
+- **`starter/`:** the evolved project, with SauceDemo UI tests on Page
+  Objects, DummyJSON API tests, CI quality gates, and an observability
+  module. See [`starter/README.md`](starter/README.md) and
+  [`docs/architecture.md`](docs/architecture.md).
+- The project still needs Node.js, npm, Git, and network access to the
+  public practice sites (SauceDemo, DummyJSON).
 
 ## License
 
